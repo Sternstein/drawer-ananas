@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity
         lis = new list();
         lis2 = new list2();
         fTrans.add(R.id.frag,lis);
-        lvMain = (ListView) findViewById(R.id.listView);
+        //lvMain = (ListView) findViewById(R.id.listView);
 
 
 
