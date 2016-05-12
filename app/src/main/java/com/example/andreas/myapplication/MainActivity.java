@@ -34,7 +34,7 @@ import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, list.OnHeadlineSelectedListener {
     int leng;
     public String myurl;
     list lis;
@@ -155,6 +155,11 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+
+
     private class ParseTask extends AsyncTask<Void, Void, String> {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -259,6 +264,8 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
+
          /*       MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(getBaseContext(), titleb, picb, synb);
 
 
@@ -327,5 +334,24 @@ public class MainActivity extends AppCompatActivity
 
 
         }
+    }
+    @Override
+    public void onArticleSelected(int position) {
+        Bundle bundle2 = new Bundle();
+        bundle2.putInt("pos",position);
+        if (lis2!=null) {
+            fTrans = getFragmentManager().beginTransaction();
+            fTrans.remove(lis2);
+            fTrans.commit();
+        }
+
+        fTrans = getFragmentManager().beginTransaction();
+        lis2 = new list2();
+        lis.setArguments(bundle2);
+        fTrans.replace(R.id.frag,lis2);
+        fTrans.addToBackStack(null);
+        fTrans.commit();
+
+
     }
 }

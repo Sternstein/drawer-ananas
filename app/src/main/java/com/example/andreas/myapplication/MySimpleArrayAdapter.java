@@ -37,7 +37,6 @@ public class MySimpleArrayAdapter extends ArrayAdapter<String> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
         textView.setText(values[position]);
         textSub.setText(syn[position]);
-        //imageView.setImageResource(R.drawable.bann);
         Picasso.with(getContext()).load(url[position]).into(imageView);
 
 
