@@ -51,10 +51,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         myurl="http://192.168.1.15:3000/categories/1.json";
         new ParseTask().execute();
-        fTrans = getFragmentManager().beginTransaction();
-        lis = new list();
-        lis2 = new list2();
-        fTrans.add(R.id.frag,lis);
+
         //lvMain = (ListView) findViewById(R.id.listView);
 
 
@@ -113,30 +110,37 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_camera:
+
                 myurl ="http://192.168.1.15:3000/categories/1.json";
                 new ParseTask().execute();
                 break;
             case R.id.nav_gallery:
+
                 myurl ="http://192.168.1.15:3000/categories/2.json";
                 new ParseTask().execute();
                 break;
             case R.id.nav_slideshow:
+
                 myurl ="http://192.168.1.15:3000/categories/3.json";
                 new ParseTask().execute();
                 break;
             case R.id.nav_manage:
+
                 myurl ="http://192.168.1.15:3000/categories/4.json";
                 new ParseTask().execute();
                 break;
             case R.id.nav_share:
+
                 myurl ="http://192.168.1.15:3000/categories/5.json";
                 new ParseTask().execute();
                 break;
             case R.id.nav_send:
+
                 myurl ="http://192.168.1.15:3000/categories/6.json";
                 new ParseTask().execute();
                 break;
             case R.id.putesh:
+
                 myurl ="http://192.168.1.15:3000/categories/7.json";
                 new ParseTask().execute();
                 break;
@@ -228,16 +232,39 @@ public class MainActivity extends AppCompatActivity
 
 
                 }
+                Bundle bundle = new Bundle();
+                bundle.putStringArray("tit",titleb);
+                bundle.putStringArray("pic",picb);
+                bundle.putStringArray("syn",synb);
+
+                if (lis!=null) {
+                    fTrans = getFragmentManager().beginTransaction();
+                    fTrans.remove(lis);
+                    fTrans.commit();
+                }
+
+                    fTrans = getFragmentManager().beginTransaction();
+                    lis = new list();
+                    // lis2 = new list2();
+                    lis.setArguments(bundle);
+                    fTrans.add(R.id.frag,lis);
+                    fTrans.addToBackStack(null);
+                    fTrans.commit();
 
 
 
 
-                MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(getBaseContext(), titleb, picb, synb);
+
+
+
+
+
+         /*       MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(getBaseContext(), titleb, picb, synb);
 
 
                lvMain.setAdapter(adapter);
 
-                lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+               lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
@@ -292,7 +319,7 @@ public class MainActivity extends AppCompatActivity
                 });
 
 
-
+*/
             } catch (JSONException e) {
                 e.printStackTrace();
 

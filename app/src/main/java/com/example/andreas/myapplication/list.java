@@ -20,6 +20,12 @@ public class list extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        titleb=null;
+        picb=null;
+        synb=null;
+        titleb=this.getArguments().getStringArray("tit");
+        picb=this.getArguments().getStringArray("pic");
+        synb=this.getArguments().getStringArray("syn");
         MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(getActivity(), titleb, picb, synb);
 
         setListAdapter(adapter);
