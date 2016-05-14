@@ -3,31 +3,31 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav1"
             android:icon="@drawable/ic_menu_camera"
             android:title="Кухня" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav2"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Науки" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav3"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Мода" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav4"
             android:icon="@drawable/ic_menu_manage"
             android:title="Мобильное" />
         <item
-            android:id="@+id/nav_share"
+            android:id="@+id/nav5"
             android:icon="@drawable/ic_menu_share"
             android:title="Здоровье" />
         <item
-            android:id="@+id/nav_send"
+            android:id="@+id/nav6"
             android:icon="@drawable/ic_menu_send"
             android:title="Бизнес" />
         <item
-            android:id="@+id/putesh"
+            android:id="@+id/nav7"
             android:icon="@drawable/ic_menu_send"
             android:title="Путешествия" />
 
