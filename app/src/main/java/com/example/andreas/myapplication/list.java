@@ -12,25 +12,13 @@ import android.view.ViewGroup;
  */
 import android.app.ListFragment;
 import android.os.Bundle;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class list extends ListFragment {
-    OnHeadlineSelectedListener mCallback;
+
     String [] titleb, picb, synb;
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        titleb=null;
-        picb=null;
-        synb=null;
-        titleb=this.getArguments().getStringArray("tit");
-        picb=this.getArguments().getStringArray("pic");
-        synb=this.getArguments().getStringArray("syn");
-
-    }
+    OnHeadlineSelectedListener mCallback;
 
     public interface OnHeadlineSelectedListener {
         public void onArticleSelected(int position);
@@ -51,28 +39,29 @@ public class list extends ListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.list, null);
-        /*View view = inflater.inflate(R.layout.list, container, false);
-        ListView lv = (ListView) view.findViewById(R.id.listview);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        titleb=null;
+        picb=null;
+        synb=null;
+        titleb=this.getArguments().getStringArray("tit");
+        picb=this.getArguments().getStringArray("pic");
+        synb=this.getArguments().getStringArray("syn");
         MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(getActivity(), titleb, picb, synb);
 
-        lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        setListAdapter(adapter);
 
-            }
-        });
+    }
 
-        return view;*/
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        // Send the event to the host activity
+        mCallback.onArticleSelected(position);
     }
 
     @Override
-    public void onListItemClick(ListView lv, View view, int position, long id) {
-        // Send the event to the host activity
-        mCallback.onArticleSelected(position);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.list, null);
     }
 
 }
