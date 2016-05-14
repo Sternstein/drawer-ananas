@@ -31,17 +31,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, list.OnHeadlineSelectedListener {
     int leng;
-    public String myurl;
+    public String myurl, siteurl;
     list lis;
     list2 lis2;
     public static String LOG_TAG = "my_log";
-    public String[] titleb, bodyb, picb, synb, favb, impb, datb, useb, avab;
-    ListView lvMain;
+    public static String LOG_POS = "pos_log";
+    String dat;
+    public String[] titleb, bodyb, picb, synb, favb, impb, datb, useb, avab, nav;
+    public int[] z;
     FragmentTransaction fTrans;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +55,24 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        myurl="http://192.168.1.15:3000/categories/1.json";
+        siteurl ="http://192.168.1.15:3000";
+        myurl=siteurl+"/categories/newest.json";
+
+        if (lis!=null) {
+            fTrans = getFragmentManager().beginTransaction();
+            fTrans.remove(lis);
+            fTrans.commit();
+        }
+
+        if (lis2!=null) {
+            fTrans = getFragmentManager().beginTransaction();
+            fTrans.remove(lis2);
+            fTrans.commit();
+        }
+
         new ParseTask().execute();
 
-        //lvMain = (ListView) findViewById(R.id.listView);
+
 
 
 
@@ -107,41 +127,40 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-
         switch (id) {
-            case R.id.nav_camera:
+            case R.id.nav1:
 
-                myurl ="http://192.168.1.15:3000/categories/1.json";
+                myurl =siteurl+"/categories/1.json";
                 new ParseTask().execute();
                 break;
-            case R.id.nav_gallery:
+            case R.id.nav2:
 
-                myurl ="http://192.168.1.15:3000/categories/2.json";
+                myurl =siteurl+"/categories/2.json";
                 new ParseTask().execute();
                 break;
-            case R.id.nav_slideshow:
+            case R.id.nav3:
 
-                myurl ="http://192.168.1.15:3000/categories/3.json";
+                myurl =siteurl+"/categories/3.json";
                 new ParseTask().execute();
                 break;
-            case R.id.nav_manage:
+            case R.id.nav4:
 
-                myurl ="http://192.168.1.15:3000/categories/4.json";
+                myurl =siteurl+"/categories/4.json";
                 new ParseTask().execute();
                 break;
-            case R.id.nav_share:
+            case R.id.nav5:
 
-                myurl ="http://192.168.1.15:3000/categories/5.json";
+                myurl =siteurl+"/categories/5.json";
                 new ParseTask().execute();
                 break;
-            case R.id.nav_send:
+            case R.id.nav6:
 
-                myurl ="http://192.168.1.15:3000/categories/6.json";
+                myurl =siteurl+"/categories/6.json";
                 new ParseTask().execute();
                 break;
-            case R.id.putesh:
+            case R.id.nav7:
 
-                myurl ="http://192.168.1.15:3000/categories/7.json";
+                myurl =siteurl+"/categories/7.json";
                 new ParseTask().execute();
                 break;
         }
@@ -155,8 +174,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
 
 
 
@@ -211,7 +228,7 @@ public class MainActivity extends AppCompatActivity
                     String title = friend.getString("title");
                     String body = friend.getString("body");
                     String picpre =friend.getString("avatarMediumUrl");
-                    String pic = "http://192.168.1.15:3000"+picpre;
+                    String pic = siteurl+picpre;
                     String syn = friend.getString("sinopsis");
                     String dat = friend.getString("createdAt");
                     String fav = friend.getString("favoritesCount");
@@ -234,6 +251,7 @@ public class MainActivity extends AppCompatActivity
                     useb[i]=user;
                     avab[i]=ava;
                     Picasso.with(MainActivity.this).load(pic).fetch();
+                    Picasso.with(MainActivity.this).load(ava).fetch();
 
 
                 }
@@ -243,18 +261,22 @@ public class MainActivity extends AppCompatActivity
                 bundle.putStringArray("syn",synb);
 
                 if (lis!=null) {
+                    if (lis2!=null) {
+                        fTrans = getFragmentManager().beginTransaction();
+                        fTrans.remove(lis2);
+                        fTrans.commit();
+                    }
                     fTrans = getFragmentManager().beginTransaction();
                     fTrans.remove(lis);
                     fTrans.commit();
                 }
 
-                    fTrans = getFragmentManager().beginTransaction();
-                    lis = new list();
-                    // lis2 = new list2();
-                    lis.setArguments(bundle);
-                    fTrans.add(R.id.frag,lis);
-                    fTrans.addToBackStack(null);
-                    fTrans.commit();
+                fTrans = getFragmentManager().beginTransaction();
+                lis = new list();
+                lis.setArguments(bundle);
+                fTrans.add(R.id.frag,lis);
+                fTrans.addToBackStack(null);
+                fTrans.commit();
 
 
 
@@ -265,68 +287,6 @@ public class MainActivity extends AppCompatActivity
 
 
 
-
-         /*       MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(getBaseContext(), titleb, picb, synb);
-
-
-               lvMain.setAdapter(adapter);
-
-               lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-
-
-                        for (int i = 0; i < leng; i++){
-                            if(position == i) {
-                                fTrans.replace(R.id.frag,lis2);
-
-
-
-                                String titl = titleb[i];
-                                String bod = bodyb[i];
-                                String pi = picb[i];
-                                String da = datb[i];
-                                String fa = favb[i];
-                                String im = impb[i];
-                                String av =avab[i];
-                                String us =useb[i];
-
-                                TextView Like = (TextView) findViewById(R.id.likes);
-                                TextView Wat = (TextView) findViewById(R.id.textView3);
-                                TextView Dat = (TextView) findViewById(R.id.textView4);
-                                TextView Zag = (TextView) findViewById(R.id.textView5);
-                                TextView tRead = (TextView) findViewById(R.id.textView6);
-                                ImageView imV = (ImageView) findViewById(R.id.imageView2);
-                                ImageView ava = (ImageView) findViewById(R.id.imageView3);
-
-                                Zag.setText(titl);
-                                tRead.setText(bod);
-                                Like.setText("Likes: "+fa);
-                                Dat.setText("Post created by "+us+" at "+da);
-                                Wat.setText("Количество просмотров: "+im);
-
-
-
-                                String avat ="http://192.168.1.15:3000"+av;
-                                Picasso.with(getBaseContext()).load(pi).into(imV);
-                                Picasso.with(getBaseContext()).load(avat).into(ava);
-
-
-
-
-                            }
-                        }
-
-
-
-
-
-                    }
-                });
-
-
-*/
             } catch (JSONException e) {
                 e.printStackTrace();
 
@@ -337,8 +297,46 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public void onArticleSelected(int position) {
+        int i = position;
+        String titl = titleb[i];
+        String bod = bodyb[i];
+        String pi = picb[i];
+        String da = datb[i];
+        String fa = favb[i];
+        String im = impb[i];
+        String av =avab[i];
+        String us =useb[i];
+        DateFormat format = new SimpleDateFormat("dd, MM, yyyy");
+        try {
+            Date date = format.parse(da);
+            Log.d(LOG_POS,"Date Format to String : "+ date);
+
+            dat =  format.format(date);
+            Log.d(LOG_POS,"Date Formatting : "+ dat);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         Bundle bundle2 = new Bundle();
-        bundle2.putInt("pos",position);
+        bundle2.putString("tit",titl);
+        bundle2.putString("pic",pi);
+        bundle2.putString("bod",bod);
+        bundle2.putString("da",dat);
+        bundle2.putString("fa",fa);
+        bundle2.putString("im",im);
+        bundle2.putString("av",av);
+        bundle2.putString("us",us);
+
+
+        Log.d(LOG_POS, "____________________________________________________");
+        Log.d(LOG_POS, "Title : " + titl);
+        Log.d(LOG_POS, "Body : " + bod);
+        Log.d(LOG_POS, "Picture : " + pi);
+        Log.d(LOG_POS, "Date : " + da);
+        Log.d(LOG_POS, "Avatar " + av);
+
+
+
         if (lis2!=null) {
             fTrans = getFragmentManager().beginTransaction();
             fTrans.remove(lis2);
@@ -347,11 +345,10 @@ public class MainActivity extends AppCompatActivity
 
         fTrans = getFragmentManager().beginTransaction();
         lis2 = new list2();
-        lis.setArguments(bundle2);
+        lis2.setArguments(bundle2);
         fTrans.replace(R.id.frag,lis2);
-        fTrans.addToBackStack(null);
+
+
         fTrans.commit();
-
-
     }
 }
