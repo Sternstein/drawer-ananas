@@ -1,10 +1,13 @@
 package com.example.andreas.myapplication;
 
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -91,11 +94,25 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else{
+
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            Log.d(LOG_POS, "popping backstack");
+            /*if (lis!=null) {
+                fTrans = getFragmentManager().beginTransaction();
+                fTrans.remove(lis);
+                fTrans.commit();
+            }*/
+            getFragmentManager().popBackStack();
         } else {
-            super.onBackPressed();
+            Log.d(LOG_POS, "nothing on backstack, calling super");
+            openQuitDialog();
+            //super.onBackPressed();
+        }
         }
     }
 
@@ -261,13 +278,15 @@ public class MainActivity extends AppCompatActivity
                 bundle.putStringArray("syn",synb);
 
                 if (lis!=null) {
-                    if (lis2!=null) {
-                        fTrans = getFragmentManager().beginTransaction();
-                        fTrans.remove(lis2);
-                        fTrans.commit();
-                    }
+
                     fTrans = getFragmentManager().beginTransaction();
                     fTrans.remove(lis);
+                    fTrans.commit();
+                }
+
+                if (lis2!=null) {
+                    fTrans = getFragmentManager().beginTransaction();
+                    fTrans.remove(lis2);
                     fTrans.commit();
                 }
 
@@ -275,7 +294,7 @@ public class MainActivity extends AppCompatActivity
                 lis = new list();
                 lis.setArguments(bundle);
                 fTrans.add(R.id.frag,lis);
-                fTrans.addToBackStack(null);
+               // fTrans.addToBackStack(null);
                 fTrans.commit();
 
 
@@ -347,8 +366,33 @@ public class MainActivity extends AppCompatActivity
         lis2 = new list2();
         lis2.setArguments(bundle2);
         fTrans.replace(R.id.frag,lis2);
+        fTrans.addToBackStack(null);
 
 
         fTrans.commit();
+    }
+
+    private void openQuitDialog() {
+        AlertDialog.Builder quitDialog = new AlertDialog.Builder(
+                MainActivity.this);
+        quitDialog.setTitle("Выход: Вы уверены?");
+
+        quitDialog.setPositiveButton("Таки да!",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                finish();
+
+            }
+        });
+
+        quitDialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        quitDialog.show();
     }
 }
